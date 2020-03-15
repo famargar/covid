@@ -69,8 +69,6 @@ async def index(request: Request) -> Response:
 @app.get("/request-calculation")
 async def request_calculation(request: Request) -> Response:
     """TODO: This view should process a form"""
-    """MATI: Actually, I don't think we'll have anything to process here as the first page just has a START button"""
-
     # TODO: Use real data model here
 
     places = [Place(place) for place in PLACES]
@@ -138,4 +136,12 @@ async def result_calculations(
             "place": place,
             "probability": probability,
         },
+    )
+
+
+@app.get("/contact")
+async def request_calculation(request: Request) -> Response:
+    return templates.TemplateResponse(
+        "contact-form.html",
+        {"request": request, "message": ""},
     )
