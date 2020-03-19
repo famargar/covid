@@ -124,7 +124,6 @@ var channel = url.searchParams.get('channel')
 d3.json("https://storage.googleapis.com/static-covid/static/data-" + (channel ? channel : 'main') +"-gleam.json")
 .then(function(data) {
 
-  // console.log('json data', data)
   var listOfCountries = getListOfRegions(data.regions);
   var selected = {
     country: getSelectedCountry(listOfCountries),
@@ -282,6 +281,12 @@ d3.json("https://storage.googleapis.com/static-covid/static/data-" + (channel ? 
     .attr("class", "tooltip")
     .style("opacity", 0);
 
+  var hoveringDate = svg
+    .append("text")
+    .classed("xlabel", true)
+    .style("fill", "#a9a9ac")
+    .style("text-anchor", "middle")
+
   svg
     .append("rect")
     .attr("class", "overlay")
@@ -293,6 +298,7 @@ d3.json("https://storage.googleapis.com/static-covid/static/data-" + (channel ? 
     .on("mouseout", function () {
       tooltip.style("opacity", 0);
       crosshair.style("display", "none");
+      hoveringDate.text('')
     })
     .on("mousemove", function () {
       var mouse = d3.mouse(this);
@@ -324,6 +330,12 @@ d3.json("https://storage.googleapis.com/static-covid/static/data-" + (channel ? 
         .html(hoveredValues.map((h, i) => `<span class="color${i+1}">${(h/10).toFixed(5)}</span>`).join("<br>")) //TODO: `<span class="color${i}">h</span>` // scenarios[i] + ": " +
         .style("left", d3.event.pageX + "px")
         .style("top", d3.event.pageY - 28 + "px");
+
+      var parseDate = d3.timeFormat("%Y-%b-%d")	
+      hoveringDate.attr(
+        "transform",
+        "translate(" + mouse[0] + " ," + (margin.top) + ")"
+      ).text(parseDate(mouseDate))
     });
 
   //initialization
